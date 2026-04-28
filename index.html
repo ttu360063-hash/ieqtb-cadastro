@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IEQTB | Cadastro de Participantes</title>
+    <title>IEQTB | Congresso de Jovens</title>
     <meta
       name="description"
-      content="Site moderno e responsivo para cadastro de participantes de eventos religiosos da IEQTB."
+      content="Site moderno e responsivo para cadastro de participantes do Congresso de Jovens da IEQTB."
     />
     <meta name="theme-color" content="#050816" />
     <link rel="preconnect" href="https://images.unsplash.com" />
@@ -26,16 +26,10 @@
             <strong>Cadastro de participantes</strong>
           </div>
         </a>
-
-        <nav class="topnav" aria-label="Navegação rápida">
-          <a href="#evento">Evento</a>
-          <a href="#inscricao">Inscrição</a>
-          <a href="#beneficios">Benefícios</a>
-        </nav>
       </header>
 
       <main id="inicio" class="layout">
-        <section class="hero glass">
+        <section class="hero glass" id="evento" aria-labelledby="hero-title">
           <div class="hero-badge">
             <span class="pill">
               <span class="pill-dot"></span>
@@ -43,74 +37,51 @@
             </span>
           </div>
 
-          <h1>
-            IEQTB
-            <span>Conectando fé, organização e participação</span>
+          <img
+            src="./LOGOMARCA.png"
+            alt="Logomarca IEQTB"
+            class="hero-logo"
+          />
+
+          <h1 class="hero-title" id="hero-title">
+            Congresso de <span>Jovens</span>
           </h1>
 
-          <p class="hero-text">
-            Um site moderno, responsivo e funcional para confirmar presença de forma rápida,
-            elegante e segura — com experiência premium no celular e no computador.
-          </p>
+          <p class="hero-subtitle">Fortalecendo nossa fé e propósito</p>
 
-          <div class="hero-stats" id="evento">
-            <article class="stat-card">
-              <span class="stat-icon" data-icon="📅" aria-hidden="true"></span>
+          <div class="event-details" aria-label="Informações do evento">
+            <article class="event-chip">
+              <span class="event-icon" data-icon="📅" aria-hidden="true"></span>
               <div>
-                <strong>Data flexível</strong>
-                <p>Configuração pronta para o próximo evento</p>
+                <strong>13 de Junho de 2026</strong>
               </div>
             </article>
 
-            <article class="stat-card">
-              <span class="stat-icon" data-icon="📍" aria-hidden="true"></span>
+            <span class="event-divider" aria-hidden="true"></span>
+
+            <article class="event-chip">
+              <span class="event-icon" data-icon="📍" aria-hidden="true"></span>
               <div>
-                <strong>IEQTB</strong>
-                <p>Espaço dedicado ao seu ministério</p>
+                <strong>IEQ TOBIAS</strong>
               </div>
             </article>
-
-            <article class="stat-card">
-              <span class="stat-icon" data-icon="⚡" aria-hidden="true"></span>
-              <div>
-                <strong>Confirmação imediata</strong>
-                <p>Cadastro salvo no navegador e painel de consulta</p>
-              </div>
-            </article>
-          </div>
-
-          <div class="hero-highlight">
-            <p class="hero-highlight-title">O que este site entrega</p>
-            <ul>
-              <li>Visual escuro com glassmorphism e fundo desfocado</li>
-              <li>Formulário limpo, rápido e responsivo</li>
-              <li>Painel oculto para visualizar os cadastros</li>
-            </ul>
           </div>
         </section>
 
         <section class="panel glass" id="inscricao" aria-labelledby="form-title">
-          <div class="panel-head">
-            <div>
-              <span class="section-kicker">Inscrição</span>
-              <h2 id="form-title">Faça sua inscrição</h2>
-            </div>
-
-            <div class="live-counter" aria-live="polite">
-              <span class="live-counter-number" id="totalCount">0</span>
-              <span class="live-counter-label">cadastros salvos</span>
-            </div>
-          </div>
+          <h2 class="section-title" id="form-title">
+            Faça sua <span>inscrição</span>
+          </h2>
 
           <p class="panel-description">
-            Preencha os dados abaixo para confirmar sua participação no evento religioso.
+            Preencha os dados abaixo para confirmar sua participação.
           </p>
 
           <form id="registrationForm" class="registration-form" novalidate>
-            <div class="field">
-              <label for="name">Nome completo</label>
-              <div class="input-shell">
+            <div class="compact-field">
+              <div class="compact-row">
                 <span class="field-icon" data-icon="👤" aria-hidden="true"></span>
+                <label for="name">Nome:</label>
                 <input
                   id="name"
                   name="name"
@@ -123,10 +94,10 @@
               <small class="field-error" data-error-for="name"></small>
             </div>
 
-            <div class="field">
-              <label for="age">Idade</label>
-              <div class="input-shell">
+            <div class="compact-field">
+              <div class="compact-row">
                 <span class="field-icon" data-icon="🎂" aria-hidden="true"></span>
+                <label for="age">Idade:</label>
                 <input
                   id="age"
                   name="age"
@@ -141,10 +112,10 @@
               <small class="field-error" data-error-for="age"></small>
             </div>
 
-            <div class="field">
-              <label for="email">E-mail</label>
-              <div class="input-shell">
+            <div class="compact-field">
+              <div class="compact-row">
                 <span class="field-icon" data-icon="✉" aria-hidden="true"></span>
+                <label for="email">Gmail:</label>
                 <input
                   id="email"
                   name="email"
@@ -157,10 +128,10 @@
               <small class="field-error" data-error-for="email"></small>
             </div>
 
-            <div class="field">
-              <label for="church">Igreja local</label>
-              <div class="input-shell">
+            <div class="compact-field">
+              <div class="compact-row">
                 <span class="field-icon" data-icon="✝" aria-hidden="true"></span>
+                <label for="church">Igreja local:</label>
                 <input
                   id="church"
                   name="church"
@@ -173,10 +144,10 @@
               <small class="field-error" data-error-for="church"></small>
             </div>
 
-            <div class="field">
-              <label for="phone">Telefone</label>
-              <div class="input-shell">
+            <div class="compact-field">
+              <div class="compact-row">
                 <span class="field-icon" data-icon="☎" aria-hidden="true"></span>
+                <label for="phone">Telefone:</label>
                 <input
                   id="phone"
                   name="phone"
@@ -205,31 +176,11 @@
             <p>Haverá atualizações e lembretes enviados conforme as informações salvas.</p>
           </div>
         </section>
-
-        <section class="content-grid" id="beneficios" aria-label="Recursos do site">
-          <article class="glass info-card">
-            <span class="info-icon" data-icon="✨" aria-hidden="true"></span>
-            <h3>Visual premium</h3>
-            <p>Fundo desfocado, gradientes profundos e efeito de vidro para um acabamento moderno.</p>
-          </article>
-
-          <article class="glass info-card">
-            <span class="info-icon" data-icon="📲" aria-hidden="true"></span>
-            <h3>Responsivo de verdade</h3>
-            <p>Funciona bem em telas grandes e celulares, sem quebrar o layout.</p>
-          </article>
-
-          <article class="glass info-card">
-            <span class="info-icon" data-icon="🔒" aria-hidden="true"></span>
-            <h3>Painel oculto</h3>
-            <p>Área administrativa discreta para consultar e exportar os cadastros.</p>
-          </article>
-        </section>
       </main>
 
       <footer class="footer">
         <p>IEQTB • Cadastro de participantes</p>
-        <a class="admin-link" href="/painel-oculto/">Acesso restrito</a>
+        <a class="admin-link" href="./admin.html">Acesso restrito</a>
       </footer>
     </div>
 
