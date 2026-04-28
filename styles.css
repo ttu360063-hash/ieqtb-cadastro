@@ -852,3 +852,197 @@ img {
     scroll-behavior: auto !important;
   }
 }
+
+body:not(.admin-page) .topbar {
+  display: none;
+}
+
+body:not(.admin-page) .layout {
+  gap: 16px;
+  padding-top: 12px;
+}
+
+body:not(.admin-page) .hero,
+body:not(.admin-page) .panel {
+  width: min(780px, 100%);
+}
+
+body:not(.admin-page) .hero {
+  text-align: center;
+  padding: clamp(24px, 4vw, 40px) clamp(18px, 5vw, 42px) 30px;
+}
+
+body:not(.admin-page) .hero-badge {
+  display: none;
+}
+
+body:not(.admin-page) .hero-logo {
+  width: min(240px, 58vw);
+  margin: 0 auto 8px;
+  filter: drop-shadow(0 26px 42px rgba(0, 0, 0, 0.38));
+}
+
+body:not(.admin-page) .hero-title {
+  margin-top: 6px;
+  font-size: clamp(2.7rem, 6.8vw, 5rem);
+}
+
+body:not(.admin-page) .hero-title span {
+  display: inline;
+  margin-left: 10px;
+}
+
+body:not(.admin-page) .hero-subtitle {
+  margin-top: 8px;
+  font-size: clamp(1rem, 2.4vw, 1.4rem);
+}
+
+body:not(.admin-page) .event-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+body:not(.admin-page) .event-chip {
+  gap: 12px;
+}
+
+body:not(.admin-page) .event-chip strong {
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+}
+
+body:not(.admin-page) .event-divider {
+  display: block;
+  width: 1px;
+  height: 46px;
+}
+
+body:not(.admin-page) .panel {
+  padding: clamp(22px, 4vw, 34px);
+}
+
+body:not(.admin-page) .section-title {
+  margin-top: 2px;
+  font-size: clamp(2rem, 4.8vw, 3rem);
+}
+
+body:not(.admin-page) .panel-description {
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+
+body:not(.admin-page) .registration-form {
+  gap: 12px;
+}
+
+body:not(.admin-page) .compact-row {
+  grid-template-columns: 52px 112px minmax(0, 1fr);
+  min-height: 68px;
+  border-radius: 16px;
+}
+
+body:not(.admin-page) .compact-row label {
+  font-size: 1rem;
+}
+
+body:not(.admin-page) .compact-row input {
+  font-size: 1rem;
+}
+
+body:not(.admin-page) .submit-button {
+  min-height: 64px;
+  margin-top: 6px;
+  border-radius: 16px;
+  font-size: 1.03rem;
+}
+
+body:not(.admin-page) .form-note {
+  margin-top: 4px;
+  font-size: 0.92rem;
+}
+
+body:not(.admin-page) .success-box {
+  margin-top: 16px;
+}
+
+body:not(.admin-page) .success-box strong {
+  font-size: clamp(1.08rem, 2.4vw, 1.34rem);
+}
+
+body:not(.admin-page) .footer {
+  padding-top: 6px;
+}
+
+@media (max-width: 760px) {
+  body:not(.admin-page) .hero-logo {
+    width: min(190px, 62vw);
+  }
+
+  body:not(.admin-page) .event-details {
+    gap: 10px;
+  }
+
+  body:not(.admin-page) .event-divider {
+    display: none;
+  }
+
+  body:not(.admin-page) .event-chip {
+    justify-content: center;
+    width: 100%;
+  }
+
+  body:not(.admin-page) .compact-row {
+    grid-template-columns: 48px 96px minmax(0, 1fr);
+    min-height: 62px;
+  }
+
+body:not(.admin-page) .compact-row label {
+  font-size: 0.95rem;
+}
+
+body:not(.admin-page) .layout {
+  justify-items: center;
+}
+
+body:not(.admin-page) .hero {
+  width: min(820px, 100%);
+}
+
+body:not(.admin-page) .panel {
+  width: min(700px, 100%);
+  text-align: center;
+}
+
+body:not(.admin-page) .panel-description {
+  max-width: 56ch;
+  margin-inline: auto;
+}
+
+body:not(.admin-page) .registration-form {
+  text-align: left;
+}
+
+body:not(.admin-page) .hero-title {
+  margin-top: 16px;
+}
+
+body:not(.admin-page) .hero-subtitle {
+  margin-top: 10px;
+}
+
+body:not(.admin-page) .event-details {
+  margin-top: 30px;
+}
+
+body:not(.admin-page) .event-chip strong {
+  font-size: 1.02rem;
+}
+
+body:not(.admin-page) .success-box {
+  text-align: center;
+}
+}
