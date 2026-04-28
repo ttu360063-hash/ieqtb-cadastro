@@ -1,0 +1,7 @@
+.sixth/
+deploy-vercel.ps1
+deploy-vercel.cmd
+vercel-deploy.log
+vercel-deploy.err
+*.log
+*.err
