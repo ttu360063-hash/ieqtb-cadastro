@@ -208,13 +208,12 @@ img {
 }
 
 .hero h1 span {
-  display: block;
-  margin-top: 14px;
-  max-width: 12ch;
+  display: inline;
+  margin-left: 10px;
   color: #8fb3ff;
-  font-size: clamp(1.1rem, 2.8vw, 1.7rem);
-  font-weight: 700;
-  line-height: 1.1;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
 }
 
 .hero-text {
