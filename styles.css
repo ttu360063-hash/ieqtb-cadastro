@@ -45,11 +45,11 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -3;
-  background-image: url("https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80");
+  background-image: url("./background.png");
   background-size: cover;
   background-position: center;
-  filter: blur(10px) brightness(0.38) saturate(1.1);
-  transform: scale(1.08);
+  filter: blur(8px) brightness(0.42) saturate(1.2);
+  transform: scale(1.05);
 }
 
 body::after {
