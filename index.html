@@ -1,92 +1,145 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Congresso de Jovens</title>
-  <link rel="stylesheet" href="styles.css"/>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IEQTB | Congresso de Jovens</title>
+    <meta name="description" content="Cadastro de participantes do Congresso de Jovens da IEQTB." />
+    <meta name="theme-color" content="#050816" />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="bg-overlay"></div>
+      <div class="ambient ambient-1"></div>
+      <div class="ambient ambient-2"></div>
 
-<body>
+      <header class="topbar">
+        <a class="brand" href="#inicio" aria-label="IEQTB">
+          <img src="./LOGOMARCA.png" alt="Logomarca IEQTB" class="brand-logo" />
+          <div class="brand-copy">
+            <span class="brand-kicker">IEQTB</span>
+            <strong>Cadastro de participantes</strong>
+          </div>
+        </a>
+      </header>
 
-<div class="background"></div>
-<div class="overlay"></div>
+      <main id="inicio" class="layout">
+        <section class="hero glass" id="evento" aria-labelledby="hero-title">
+          <div class="hero-badge">
+            <span class="pill">
+              <span class="pill-dot"></span>
+              Evento religioso • Cadastro online
+            </span>
+          </div>
 
-<main class="container">
+          <img src="./LOGOMARCA.png" alt="Logomarca IEQTB" class="hero-logo" />
 
-  <section class="hero">
-    <img src="./LOGOMARCA.png" class="logo"/>
+          <h1 class="hero-title" id="hero-title">
+            Congresso de <span>Jovens</span>
+          </h1>
 
-    <h1>
-      Congresso de <span>Jovens</span>
-    </h1>
+          <p class="hero-subtitle">Fortalecendo nossa fé e propósito</p>
 
-    <p class="subtitle">
-      Fortalecendo nossa fé e propósito
-    </p>
+          <div class="event-details" aria-label="Informações do evento">
+            <article class="event-chip">
+              <span class="event-icon" data-icon="📅" aria-hidden="true"></span>
+              <div>
+                <strong>13 de Junho de 2026</strong>
+              </div>
+            </article>
 
-    <div class="info">
-      <div>📅 13 de Junho de 2026</div>
-      <div>📍 IEQ TOBIAS</div>
+            <span class="event-divider" aria-hidden="true"></span>
+
+            <article class="event-chip">
+              <span class="event-icon" data-icon="📍" aria-hidden="true"></span>
+              <div>
+                <strong>IEQ TOBIAS</strong>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel glass" id="inscricao" aria-labelledby="form-title">
+          <h2 class="section-title" id="form-title">
+            Faça sua <span>inscrição</span>
+          </h2>
+
+          <p class="panel-description">
+            Preencha os dados abaixo para confirmar sua participação.
+          </p>
+
+          <form id="registrationForm" class="registration-form" novalidate>
+            <div class="compact-field">
+              <div class="compact-row">
+                <span class="field-icon" data-icon="👤" aria-hidden="true"></span>
+                <label for="name">Nome:</label>
+                <input id="name" name="name" type="text" placeholder="Digite seu nome completo" autocomplete="name" required />
+              </div>
+              <small class="field-error" data-error-for="name"></small>
+            </div>
+
+            <div class="compact-field">
+              <div class="compact-row">
+                <span class="field-icon" data-icon="🎂" aria-hidden="true"></span>
+                <label for="age">Idade:</label>
+                <input id="age" name="age" type="number" min="1" max="120" placeholder="Digite sua idade" inputmode="numeric" required />
+              </div>
+              <small class="field-error" data-error-for="age"></small>
+            </div>
+
+            <div class="compact-field">
+              <div class="compact-row">
+                <span class="field-icon" data-icon="✉" aria-hidden="true"></span>
+                <label for="email">Gmail:</label>
+                <input id="email" name="email" type="email" placeholder="Digite seu e-mail" autocomplete="email" required />
+              </div>
+              <small class="field-error" data-error-for="email"></small>
+            </div>
+
+            <div class="compact-field">
+              <div class="compact-row">
+                <span class="field-icon" data-icon="✝" aria-hidden="true"></span>
+                <label for="church">Igreja local:</label>
+                <input id="church" name="church" type="text" placeholder="Digite o nome da sua igreja" autocomplete="organization" required />
+              </div>
+              <small class="field-error" data-error-for="church"></small>
+            </div>
+
+            <div class="compact-field">
+              <div class="compact-row">
+                <span class="field-icon" data-icon="☎" aria-hidden="true"></span>
+                <label for="phone">Telefone:</label>
+                <input id="phone" name="phone" type="tel" placeholder="Digite seu telefone" autocomplete="tel" required />
+              </div>
+              <small class="field-error" data-error-for="phone"></small>
+            </div>
+
+            <button class="submit-button" type="submit">
+              Finalizar inscrição
+              <span aria-hidden="true">→</span>
+            </button>
+
+            <p class="form-note">
+              Ao enviar, seus dados ficam registrados no painel oculto desta experiência.
+            </p>
+          </form>
+
+          <div class="success-box" id="successBox" hidden aria-live="polite">
+            <div class="success-badge">✓</div>
+            <strong>Sua inscrição foi concluída, esperamos por você!</strong>
+            <p>Haverá atualizações e lembretes enviados conforme as informações salvas.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>IEQTB • Cadastro de participantes</p>
+        <a class="admin-link" href="./admin.html">Acesso restrito</a>
+      </footer>
     </div>
-  </section>
 
-  <section class="form-box">
-
-    <h2>Faça sua <span>inscrição</span></h2>
-    <p>Preencha os dados abaixo para confirmar sua participação.</p>
-
-    <form id="form">
-
-      <div class="input">
-        <span>👤</span>
-        <input type="text" placeholder="Digite seu nome completo" required>
-      </div>
-
-      <div class="input">
-        <span>🎂</span>
-        <input type="number" placeholder="Digite sua idade" required>
-      </div>
-
-      <div class="input">
-        <span>✉</span>
-        <input type="email" placeholder="Digite seu e-mail" required>
-      </div>
-
-      <div class="input">
-        <span>⛪</span>
-        <input type="text" placeholder="Digite o nome da sua igreja" required>
-      </div>
-
-      <div class="input">
-        <span>📞</span>
-        <input type="tel" placeholder="Digite seu telefone" required>
-      </div>
-
-      <button type="submit">Finalizar inscrição →</button>
-
-    </form>
-
-    <div class="success" id="success">
-      <h3>✔</h3>
-      <strong>Sua inscrição foi concluída, esperamos por você!</strong>
-      <p>Haverá atualizações e lembretes enviados por e-mail.</p>
-    </div>
-
-  </section>
-
-</main>
-
-<script>
-const form = document.getElementById("form");
-const success = document.getElementById("success");
-
-form.addEventListener("submit", e => {
-  e.preventDefault();
-  form.style.display = "none";
-  success.style.display = "block";
-});
-</script>
-
-</body>
+    <script type="module" src="./app.js"></script>
+  </body>
 </html>
