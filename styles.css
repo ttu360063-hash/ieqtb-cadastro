@@ -45,9 +45,16 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -3;
-  background-image: url("./background.png");
+  background-image: url("./backgroundpc.png");
   background-size: cover;
   background-position: center;
+}
+
+/* Mobile: use different background */
+@media (max-width: 768px) {
+  body::before {
+    background-image: url("./backgroundmobile.png");
+  }
 }
 
 body::after {
