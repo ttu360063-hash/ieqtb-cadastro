@@ -359,13 +359,15 @@ img {
 
 .form-group label {
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.95rem;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
   background: linear-gradient(135deg, #315fe7 0%, #2444a5 44%, #7c3aed 100%);
+  box-shadow: 0 8px 20px rgba(49, 95, 231, 0.3);
   display: inline-block;
-  width: fit-content;
+  width: 100%;
+  text-align: center;
 }
 
 .input-wrap {
@@ -374,14 +376,14 @@ img {
   min-height: 52px;
   padding: 0 14px;
   border-radius: 12px;
-  background: #0d1528;
-  border: 1px solid rgba(79, 124, 255, 0.3);
-  transition: 160ms ease;
+  background: linear-gradient(135deg, #315fe7 0%, #2444a5 44%, #7c3aed 100%);
+  box-shadow: 0 8px 20px rgba(49, 95, 231, 0.3);
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-.input-wrap:focus-within {
-  border-color: rgba(79, 124, 255, 0.42);
-  box-shadow: 0 0 0 4px rgba(79, 124, 255, 0.12);
+.input-wrap:has(input:focus) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(49, 95, 231, 0.4);
 }
 
 .input-icon {
