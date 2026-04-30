@@ -57,12 +57,20 @@ body::before {
   }
 }
 
-/* Hero Logo - tamanho reducido */
+/* Hero Logo - tamanho reducido e centralizado */
 .hero-logo {
   max-width: 50%;
   height: auto;
+  display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Centralizar conteúdo do hero-badge */
+.hero-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 body::after {
@@ -157,6 +165,9 @@ img {
 .hero-badge {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pill {
