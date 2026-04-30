@@ -57,6 +57,12 @@ body::before {
   }
 }
 
+/* Hero Logo - tamanho reducido */
+.hero-logo {
+  max-width: 50%;
+  height: auto;
+}
+
 body::after {
   content: "";
   position: fixed;
