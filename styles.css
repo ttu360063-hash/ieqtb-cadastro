@@ -66,11 +66,13 @@ body::before {
   margin-right: auto;
 }
 
-/* Centralizar conteúdo do hero-badge */
-.hero-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Centralizar conteúdo do hero-badge - apenas para desktop */
+@media (min-width: 769px) {
+  .hero-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 body::after {
@@ -165,9 +167,6 @@ img {
 .hero-badge {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .pill {
