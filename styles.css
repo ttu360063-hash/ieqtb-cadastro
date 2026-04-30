@@ -66,6 +66,14 @@ body::before {
   margin-right: auto;
 }
 
+/* Próximo Nível image */
+.hero-title-image {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: 16px auto;
+}
+
 /* Centralizar conteúdo do hero-badge - apenas para desktop */
 @media (min-width: 769px) {
   .hero-badge {
