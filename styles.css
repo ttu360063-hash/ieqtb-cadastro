@@ -48,8 +48,6 @@ body::before {
   background-image: url("./background.png");
   background-size: cover;
   background-position: center;
-  filter: blur(8px) brightness(0.42) saturate(1.2);
-  transform: scale(1.05);
 }
 
 body::after {
@@ -57,11 +55,7 @@ body::after {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background:
-    linear-gradient(135deg, rgba(5, 8, 22, 0.88), rgba(9, 20, 45, 0.72) 40%, rgba(5, 8, 22, 0.94)),
-    radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.25), transparent 30%),
-    radial-gradient(circle at 80% 25%, rgba(79, 124, 255, 0.24), transparent 28%),
-    radial-gradient(circle at 50% 75%, rgba(37, 99, 235, 0.16), transparent 30%);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 a {
@@ -101,26 +95,7 @@ img {
 }
 
 .ambient {
-  position: fixed;
-  width: 42vw;
-  height: 42vw;
-  border-radius: 999px;
-  filter: blur(70px);
-  opacity: 0.28;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.ambient-1 {
-  top: -12%;
-  left: -10%;
-  background: rgba(79, 124, 255, 0.45);
-}
-
-.ambient-2 {
-  right: -12%;
-  bottom: -16%;
-  background: rgba(124, 58, 237, 0.42);
+  display: none;
 }
 
 .topbar,
@@ -163,13 +138,7 @@ img {
 }
 
 .hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(79, 124, 255, 0.14), transparent 28%),
-    radial-gradient(circle at 80% 10%, rgba(124, 58, 237, 0.16), transparent 24%);
-  pointer-events: none;
+  display: none;
 }
 
 .hero-badge {
