@@ -385,9 +385,8 @@ img {
   min-height: 52px;
   padding: 0 14px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 44%, #4c1d95 100%);
-  box-shadow: 0 8px 20px rgba(49, 95, 231, 0.3);
-  border: 1px solid rgba(124, 58, 237, 0.35);
+  background: #1e2937;
+  border: 1px solid #374151;
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
