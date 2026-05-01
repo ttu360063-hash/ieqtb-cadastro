@@ -24,6 +24,13 @@ export function saveRegistration(registration) {
   return next;
 }
 
+export function deleteRegistration(id) {
+  const current = getRegistrations();
+  const next = current.filter((r) => r.id !== id);
+  window.localStorage.setItem(REGISTRATIONS_KEY, JSON.stringify(next));
+  return next;
+}
+
 export function clearRegistrations() {
   window.localStorage.removeItem(REGISTRATIONS_KEY);
 }
