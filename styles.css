@@ -67,12 +67,12 @@ body::before {
   margin-bottom: 24px;
 }
 
-/* Próximo Nível image - mais próximo da logomarca */
+/* Próximo Nível image - sobreposta em 5px à logomarca */
 .hero-title-image {
   max-width: 80%;
   height: auto;
   display: block;
-  margin: 12px auto;
+  margin: -5px auto 0;
 }
 
 /* Centralizar conteúdo do hero-badge - apenas para desktop */
