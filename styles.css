@@ -518,5 +518,131 @@ img {
   padding: 0 clamp(16px, 4vw, 32px);
 }
 
-/* resto do CSS permanece igual... */
+/* ============ Mobile Responsive ============ */
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .layout {
+    padding: 16px 12px 24px;
+    gap: 16px;
+  }
+
+  .panel {
+    padding: 20px 16px;
+  }
+
+  .registration-form {
+    gap: 12px;
+  }
+
+  .form-group label {
+    padding: 8px 12px;
+  }
+
+  .input-wrap {
+    min-height: 48px;
+  }
+
+  .submit-button {
+    min-height: 52px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Admin Panel Mobile */
+@media (max-width: 640px) {
+  .admin-main {
+    padding: 16px 0 32px;
+  }
+
+  .admin-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-stats {
+    justify-content: space-between;
+  }
+
+  .stat-card {
+    flex: 1;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-field {
+    min-width: 100%;
+  }
+
+  .table-wrap {
+    margin: 0 -16px;
+    border-radius: 0;
+  }
+
+  .registrations-table {
+    font-size: 0.85rem;
+  }
+
+  .registrations-table th,
+  .registrations-table td {
+    padding: 10px 8px;
+  }
+}
+
+/* Registration table styles */
+.registration-name {
+  font-weight: 600;
+  display: block;
+}
+
+.registration-email {
+  color: var(--muted);
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 2px;
+}
+
+.registration-date {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 42px 20px !important;
+  color: var(--muted);
+}
+
+.empty-state strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+/*剩下 CSS保持不变*/
 
