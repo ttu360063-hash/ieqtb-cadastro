@@ -296,61 +296,6 @@ export function initAdminPage() {
 }
 
 // ============================================
-// Visual editor - drag images and see positions
-// ============================================
-
-function makeDraggableWithCoords(element, name) {
-  let isDragging = false;
-  let startX, startY, initialLeft, initialTop;
-
-  element.addEventListener("mousedown", (e) => {
-    isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    initialLeft = element.offsetLeft;
-    initialTop = element.offsetTop;
-    element.style.cursor = "grabbing";
-  });
-
-  document.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-    element.style.position = "relative";
-    element.style.left = `${initialLeft + dx}px`;
-    element.style.top = `${initialTop + dy}px`;
-  });
-
-  document.addEventListener("mouseup", () => {
-    if (isDragging) {
-      isDragging = false;
-      element.style.cursor = "grab";
-      // Show position
-      const left = element.style.left || "auto";
-      const top = element.style.top || "auto";
-      alert(`${name}: left=${left}, top=${top}`);
-      console.log(`${name}: left=${left}, top=${top}`);
-    }
-  });
-}
-
-const heroLogo = document.querySelector(".hero-logo");
-const heroTitleImage = document.querySelector(".hero-title-image");
-
-if (heroLogo) {
-  heroLogo.style.cursor = "grab";
-  heroLogo.setAttribute("draggable", "true");
-  makeDraggableWithCoords(heroLogo, "LOGOMARCA");
-}
-
-if (heroTitleImage) {
-  heroTitleImage.style.cursor = "grab";
-  heroTitleImage.setAttribute("draggable", "true");
-  makeDraggableWithCoords(heroTitleImage, "PROXIMO NIVEL");
-}
-
-console.log("Arrraste as imagens e solte para ver a posição no console");
-// ============================================
 // Init pages
 // ============================================
 
