@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IEQTB | Painel Administrativo</title>
-    <meta
-      name="description"
-      content="Painel secreto para visualizar, exportar e limpar os cadastros do evento IEQTB."
-    />
+    <meta name="description" content="Painel secreto para visualizar os cadastros do evento IEQTB." />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#040711" />
     <link rel="stylesheet" href="./styles.css" />
@@ -46,62 +43,59 @@
         font-size: 1.02rem;
       }
 
-      .admin-grid {
+      /* Auth Modal */
+      .auth-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(4, 7, 17, 0.95);
+        backdrop-filter: blur(12px);
+      }
+
+      .auth-modal.hidden {
+        display: none;
+      }
+
+      .auth-card {
+        width: min(420px, calc(100% - 32px));
+        padding: 32px;
+        border-radius: var(--radius-xl);
+        background: linear-gradient(180deg, rgba(16, 22, 40, 0.92), rgba(7, 12, 25, 0.88));
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
         display: grid;
-        grid-template-columns: minmax(280px, 360px) 1fr;
         gap: 24px;
-        align-items: start;
       }
 
-      .admin-stack {
-        display: grid;
-        gap: 24px;
-      }
-
-      .admin-auth {
-        display: grid;
-        gap: 18px;
-      }
-
-      .admin-auth h2,
-      .panel h2 {
+      .auth-card h2 {
         margin: 0;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
+        text-align: center;
       }
 
-      .admin-auth p,
-      .panel-description {
+      .auth-card p {
         margin: 0;
         color: var(--muted);
+        text-align: center;
         line-height: 1.6;
       }
 
-      .admin-link {
-        text-decoration: none;
-        color: var(--muted);
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        padding: 10px 14px;
-        transition: 0.2s ease;
-      }
-
-      .admin-link:hover,
-      .admin-link:focus-visible {
-        color: var(--text);
-        border-color: var(--border-strong);
-        transform: translateY(-1px);
-      }
-
-      .admin-footer {
-        width: min(1200px, calc(100% - 32px));
-        margin: 0 auto 32px;
-        color: var(--muted-2);
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        align-items: center;
-        flex-wrap: wrap;
+      .auth-error {
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: rgba(251, 113, 133, 0.12);
+        border: 1px solid rgba(251, 113, 133, 0.24);
+        color: #fda4af;
         font-size: 0.94rem;
+        text-align: center;
+        display: none;
+      }
+
+      .auth-error.visible {
+        display: block;
       }
 
       .auth-field input {
@@ -112,11 +106,15 @@
         border: 1px solid rgba(148, 163, 184, 0.16);
         background: rgba(6, 11, 24, 0.92);
         color: var(--text);
+        font-size: 1rem;
         outline: none;
+        text-align: center;
+        letter-spacing: 0.2em;
       }
 
       .auth-field input::placeholder {
         color: var(--muted-2);
+        letter-spacing: normal;
       }
 
       .auth-field input:focus {
@@ -124,15 +122,11 @@
         box-shadow: 0 0 0 4px rgba(79, 124, 255, 0.12);
       }
 
-      .form-grid {
-        display: grid;
-        gap: 14px;
-        margin-top: 14px;
+      .auth-field input.error {
+        border-color: rgba(251, 113, 133, 0.5);
       }
 
-      .primary-button,
-      .secondary-button,
-      .ghost-button {
+      .auth-button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -141,72 +135,96 @@
         padding: 0 18px;
         border-radius: 14px;
         font-weight: 700;
+        font-size: 1rem;
         transition: 160ms ease;
-      }
-
-      .primary-button {
         color: #fff;
         background: linear-gradient(135deg, #315fe7 0%, #2444a5 44%, #7c3aed 100%);
         box-shadow: 0 20px 35px rgba(49, 95, 231, 0.26);
+        cursor: pointer;
+        border: none;
       }
 
-      .secondary-button {
-        color: #dbe7ff;
-        background: rgba(79, 124, 255, 0.12);
-        border: 1px solid rgba(79, 124, 255, 0.22);
-      }
-
-      .ghost-button {
-        color: var(--muted);
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(148, 163, 184, 0.14);
-      }
-
-      .primary-button:hover,
-      .primary-button:focus-visible,
-      .secondary-button:hover,
-      .secondary-button:focus-visible,
-      .ghost-button:hover,
-      .ghost-button:focus-visible {
+      .auth-button:hover {
         transform: translateY(-1px);
         outline: none;
       }
 
-      .panel-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 20px;
-        flex-wrap: wrap;
-        margin-bottom: 18px;
+/* Admin Panel */
+      .admin-panel {
+        display: none;
+        grid-gap: 24px;
+        gap: 24px;
       }
 
-      .stats-grid {
+      .admin-panel.visible {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        min-width: min(100%, 280px);
+      }
+
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .admin-stats {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
       }
 
       .stat-card {
-        padding: 14px 16px;
+        padding: 14px 20px;
         border-radius: 16px;
         background: rgba(4, 9, 22, 0.42);
         border: 1px solid rgba(148, 163, 184, 0.14);
-        display: grid;
-        gap: 4px;
       }
 
       .stat-card strong {
-        font-size: 1.45rem;
+        font-size: 1.5rem;
+        display: block;
         color: var(--text);
       }
 
       .stat-card span {
         color: var(--muted);
-        font-size: 0.9rem;
+        font-size: 0.88rem;
       }
 
+      /* Search */
+      .search-box {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .search-field {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .search-field input {
+        width: 100%;
+        min-height: 48px;
+        padding: 0 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        background: rgba(6, 11, 24, 0.92);
+        color: var(--text);
+        font-size: 1rem;
+        outline: none;
+      }
+
+      .search-field input::placeholder {
+        color: var(--muted-2);
+      }
+
+      .search-field input:focus {
+        border-color: rgba(79, 124, 255, 0.42);
+      }
+
+      /* Table */
       .table-wrap {
         overflow-x: auto;
         border-radius: var(--radius-lg);
@@ -215,63 +233,122 @@
       .registrations-table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 760px;
+        min-width: 600px;
       }
 
       .registrations-table th,
       .registrations-table td {
         text-align: left;
-        padding: 16px 14px;
+        padding: 14px 12px;
         border-bottom: 1px solid rgba(148, 163, 184, 0.1);
         vertical-align: top;
       }
 
       .registrations-table th {
         color: var(--muted);
-        font-size: 0.88rem;
+        font-size: 0.84rem;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.06em;
+        background: rgba(4, 9, 22, 0.42);
+        position: sticky;
+        top: 0;
       }
 
       .registrations-table td {
         color: var(--text);
       }
 
-      .registrations-table td span {
+      .registration-name {
+        font-weight: 600;
         display: block;
+      }
+
+      .registration-email {
         color: var(--muted);
-        margin-top: 4px;
-        font-size: 0.92rem;
+        font-size: 0.9rem;
+        display: block;
+        margin-top: 2px;
+      }
+
+      .registration-date {
+        color: var(--muted);
+        font-size: 0.88rem;
       }
 
       .empty-state {
-        padding: 26px !important;
         text-align: center;
+        padding: 42px 20px !important;
         color: var(--muted);
       }
 
-      .panel-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
+      .empty-state strong {
+        display: block;
+        font-size: 1.1rem;
+        margin-bottom: 6px;
       }
 
-      @media (max-width: 960px) {
-        .admin-grid {
-          grid-template-columns: 1fr;
-        }
+      /* Actions */
+      .panel-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .action-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.92rem;
+        cursor: pointer;
+        transition: 160ms ease;
+        border: none;
+      }
+
+      .action-button.secondary {
+        color: #dbe7ff;
+        background: rgba(79, 124, 255, 0.12);
+        border: 1px solid rgba(79, 124, 255, 0.22);
+      }
+
+      .action-button.ghost {
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(148, 163, 184, 0.14);
+      }
+
+      .action-button.danger {
+        color: #fda4af;
+        background: rgba(251, 113, 133, 0.12);
+        border: 1px solid rgba(251, 113, 133, 0.24);
+      }
+
+      .action-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .delete-btn {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.84rem;
+        cursor: pointer;
+        border: none;
+        color: #fda4af;
+        background: rgba(251, 113, 133, 0.1);
+        transition: 160ms ease;
+      }
+
+      .delete-btn:hover {
+        background: rgba(251, 113, 133, 0.2);
       }
 
       @media (max-width: 640px) {
         .admin-main {
           width: min(100% - 20px, 1200px);
           padding-top: 20px;
-        }
-
-        .admin-footer {
-          width: min(100% - 20px, 1200px);
-          font-size: 0.88rem;
         }
       }
     </style>
@@ -302,101 +379,104 @@
             <span class="pill-dot"></span>
             Acesso restrito aos organizadores
           </span>
-          <h1>Controle os cadastros do evento em um painel seguro.</h1>
-          <p id="adminStatusMessage">
-            Digite o código de acesso para visualizar os participantes cadastrados,
-            exportar os dados em CSV e limpar a lista quando necessário.
-          </p>
+          <h1>Controle os cadastros do evento.</h1>
+          <p>Gerencie os participantes cadastrados no painel seguro.</p>
         </section>
 
-        <section class="admin-grid">
-          <article class="glass panel" id="adminAuthCard">
-            <div class="admin-auth">
-              <div>
-                <h2>Acesso administrativo</h2>
-                <p class="panel-description">
-                  Use o código reservado para liberar a visualização dos registros.
-                </p>
-              </div>
-
-              <form id="adminAuthForm" class="form-grid">
-                <label class="field auth-field">
-                  <span>Código de acesso</span>
-                  <input
-                    id="adminCode"
-                    name="adminCode"
-                    type="password"
-                    placeholder="Digite o código"
-                    autocomplete="off"
-                    inputmode="text"
-                  />
-                </label>
-
-                <button type="submit" class="primary-button">Entrar no painel</button>
-              </form>
+        <!-- Auth Modal -->
+        <div id="authModal" class="auth-modal">
+          <div class="auth-card">
+            <h2>🔐 Acesso Restrito</h2>
+            <p>Digite a senha administrativa para acessar o painel.</p>
+            
+            <div id="authError" class="auth-error">
+             Senha incorreta. Tente novamente.
             </div>
-          </article>
 
-          <div class="admin-stack">
-            <section class="glass panel" id="adminPanel" hidden>
-              <div class="panel-header">
-                <div>
-                  <h2>Cadastros recebidos</h2>
-                  <p class="panel-description">
-                    Veja os participantes, exporte a planilha e gerencie os registros salvos no navegador.
-                  </p>
+            <div class="auth-field">
+              <input
+                id="adminPassword"
+                type="password"
+                placeholder="Digite a senha"
+                autocomplete="off"
+                inputmode="text"
+              />
+            </div>
+
+            <button type="button" id="authSubmit" class="auth-button">
+              Acessar painel
+            </button>
+          </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel">
+          <div class="glass panel">
+            <div class="admin-header">
+              <div class="admin-stats">
+                <div class="stat-card">
+                  <strong id="totalCount">0</strong>
+                  <span>Total de cadastros</span>
                 </div>
-                <div class="stats-grid">
-                  <div class="stat-card">
-                    <strong id="adminCount">0</strong>
-                    <span>Total de cadastros</span>
-                  </div>
-                  <div class="stat-card">
-                    <strong id="adminState">Acesso restrito</strong>
-                    <span>Status do painel</span>
-                  </div>
+                <div class="stat-card">
+                  <strong id="currentUser">Admin</strong>
+                  <span>Status</span>
                 </div>
               </div>
 
               <div class="panel-actions">
-                <button id="exportCsvButton" type="button" class="secondary-button">
-                  Exportar CSV
+                <button type="button" id="exportBtn" class="action-button secondary">
+                  📥 Exportar CSV
                 </button>
-                <button id="clearRegistrationsButton" type="button" class="ghost-button">
-                  Limpar cadastros
-                </button>
-                <button id="logoutButton" type="button" class="ghost-button">
-                  Sair
+                <button type="button" id="logoutBtn" class="action-button ghost">
+                  🚪 Sair
                 </button>
               </div>
-
-              <div class="table-wrap">
-                <table class="registrations-table">
-                  <thead>
-                    <tr>
-                      <th>Participante</th>
-                      <th>Idade</th>
-                      <th>Igreja</th>
-                      <th>Telefone</th>
-                      <th>Cadastro</th>
-                      <th>ID</th>
-                    </tr>
-                  </thead>
-                  <tbody id="registrationsTableBody">
-                    <tr>
-                      <td colspan="6" class="empty-state">Nenhum cadastro foi salvo ainda.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
+            </div>
           </div>
-        </section>
+
+          <div class="glass panel">
+            <div class="search-box">
+              <div class="search-field">
+                <input
+                  id="searchInput"
+                  type="text"
+                  placeholder="🔍 Buscar por nome ou email..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="glass panel">
+            <div class="table-wrap">
+              <table class="registrations-table">
+                <thead>
+                  <tr>
+                    <th>Participante</th>
+                    <th>Idade</th>
+                    <th>Igreja</th>
+                    <th>Telefone</th>
+                    <th>Data de cadastro</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="registrationsList">
+                  <tr>
+                    <td colspan="6" class="empty-state">
+                      <strong>Nenhum cadastro encontrado</strong>
+                      Ainda não há participantes cadastrados.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </main>
 
       <footer class="admin-footer">
         <span>IEQTB • Painel interno do evento</span>
-        <span>Protegido por acesso reservado aos organizadores</span>
+        <span>Protegido por senha administrativa</span>
       </footer>
     </div>
 
