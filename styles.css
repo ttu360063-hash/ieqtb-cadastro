@@ -64,15 +64,15 @@ body::before {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
-/* Próximo Nível image - afastar 200px do logo */
+/* Próximo Nível image - colado no logo */
 .hero-title-image {
   max-width: 80%;
   height: auto;
   display: block;
-  margin: -205px auto 0;
+  margin: 0 auto 0;
 }
 
 /* Centralizar conteúdo do hero-badge - apenas para desktop */
