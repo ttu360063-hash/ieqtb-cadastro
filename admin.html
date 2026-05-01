@@ -15,10 +15,11 @@
         flex-direction: column;
       }
 
-      .admin-main {
-        width: min(1200px, calc(100% - 32px));
+.admin-main {
+        max-width: 1000px;
+        width: 100%;
         margin: 0 auto;
-        padding: 28px 0 56px;
+        padding: 20px clamp(16px, 4vw, 32px) 34px;
         display: grid;
         gap: 24px;
       }
