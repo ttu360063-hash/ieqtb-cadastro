@@ -9,16 +9,25 @@
     <meta name="theme-color" content="#040711" />
     <link rel="stylesheet" href="./styles.css" />
     <style>
-      .admin-page {
+.admin-page {
         min-height: 100vh;
+        width: 100%;
+        max-width: 100%;
         display: flex;
         flex-direction: column;
       }
 
-.admin-main {
-        max-width: 1000px;
+      .topbar {
         width: 100%;
-        margin: 0 auto;
+        max-width: 100%;
+        margin: 0;
+        padding: 10px 16px;
+      }
+
+.admin-main {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
         padding: 20px clamp(16px, 4vw, 32px) 34px;
         display: grid;
         gap: 24px;
@@ -161,9 +170,11 @@
         display: none;
         grid-gap: 24px;
         gap: 24px;
-        max-width: 1000px;
         width: 100%;
-        margin: 0 auto;
+        max-width: 100%;
+        margin: 0;
+        padding-left: 20px;
+        padding-right: 20px;
       }
 
       .admin-panel.visible {
@@ -588,7 +599,7 @@
         </nav>
       </header>
 
-<main class="admin-main layout">
+<main class="admin-main">
         <section class="admin-hero glass">
           <span class="pill">
             <span class="pill-dot"></span>
