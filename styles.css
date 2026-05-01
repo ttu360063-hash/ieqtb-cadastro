@@ -67,7 +67,7 @@ body::before {
   margin-bottom: 24px;
 }
 
-/* Próximo Nível image - subir 200px */
+/* Próximo Nível image - afastar 200px do logo */
 .hero-title-image {
   max-width: 80%;
   height: auto;
