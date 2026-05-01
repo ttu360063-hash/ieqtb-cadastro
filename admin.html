@@ -2,7 +2,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>IEQTB | Painel Administrativo</title>
     <meta name="description" content="Painel secreto para visualizar os cadastros do evento IEQTB." />
     <meta name="robots" content="noindex, nofollow" />
@@ -43,7 +43,7 @@
         font-size: 1.02rem;
       }
 
-      /* Auth Modal */
+/* Auth Modal */
       .auth-modal {
         position: fixed;
         inset: 0;
@@ -53,6 +53,12 @@
         justify-content: center;
         background: rgba(4, 7, 17, 0.95);
         backdrop-filter: blur(12px);
+        padding: 16px;
+      }
+
+      /* Main container constraints */
+      .admin-page {
+        overflow-x: hidden;
       }
 
       .auth-modal.hidden {
