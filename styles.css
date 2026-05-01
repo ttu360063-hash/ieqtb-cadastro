@@ -75,6 +75,17 @@ body::before {
   margin: 0 auto 0;
 }
 
+/* Mobile: separado as imágenes */
+@media (max-width: 768px) {
+  .hero-logo {
+    margin-bottom: 16px;
+  }
+  
+  .hero-title-image {
+    margin-top: 16px;
+  }
+}
+
 /* Centralizar conteúdo do hero-badge - apenas para desktop */
 @media (min-width: 769px) {
   .hero-badge {
