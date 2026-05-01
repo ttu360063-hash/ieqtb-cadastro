@@ -268,10 +268,11 @@ export function initAdminPage() {
 
   if (!authSubmit || !passwordInput) return;
 
-  authSubmit.addEventListener("click", () => {
+authSubmit.addEventListener("click", () => {
     const password = passwordInput.value.trim();
 
-    if (password !== ADMIN_PASSWORD) {
+    // Aceita senha em maiúsculas OU minúsculas (case-insensitive)
+    if (password.toUpperCase() !== ADMIN_PASSWORD) {
       if (authError) authError.classList.add("visible");
       if (passwordInput) {
         passwordInput.classList.add("error");
