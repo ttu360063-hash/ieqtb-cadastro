@@ -568,52 +568,129 @@ img {
   }
 }
 
-/* Admin Panel Mobile */
+/* Admin Panel Mobile - Layout total */
 @media (max-width: 640px) {
+  .admin-page {
+    min-height: 100vh;
+  }
+
   .admin-main {
-    padding: 16px 0 32px;
+    width: 100%;
+    padding: 12px 0 24px;
+    gap: 16px;
+  }
+
+  .admin-hero {
+    padding: 16px;
   }
 
   .admin-hero h1 {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .admin-hero p {
+    font-size: 0.9rem;
   }
 
   .admin-header {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
 
   .admin-stats {
+    display: flex;
     justify-content: space-between;
+    gap: 8px;
   }
 
   .stat-card {
     flex: 1;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  .stat-card strong {
+    font-size: 1.2rem;
+  }
+
+  .stat-card span {
+    font-size: 0.75rem;
+  }
+
+  .panel-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .action-button {
+    flex: 1;
+    justify-content: center;
   }
 
   .search-box {
     flex-direction: column;
+    width: 100%;
   }
 
   .search-field {
-    min-width: 100%;
+    width: 100%;
   }
 
+  /* Table responsive - scroll horizontal */
   .table-wrap {
     margin: 0 -16px;
-    border-radius: 0;
+    padding: 0 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .registrations-table {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    min-width: 500px;
+    white-space: nowrap;
   }
 
   .registrations-table th,
   .registrations-table td {
-    padding: 10px 8px;
+    padding: 8px 6px;
+  }
+
+  .registration-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .registration-email {
+    font-size: 0.75rem;
+  }
+
+  .delete-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  /* Auth modal mobile */
+  .auth-card {
+    padding: 20px;
+    width: calc(100% - 24px);
+  }
+
+  .auth-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .auth-field input {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+
+  .auth-button {
+    min-height: 44px;
+    font-size: 0.9rem;
   }
 }
-
 /* Registration table styles */
 .registration-name {
   font-weight: 600;
