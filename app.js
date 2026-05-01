@@ -1,6 +1,7 @@
 import {
   clearAdminSession,
   clearRegistrations,
+  deleteRegistration,
   exportRegistrationsAsCsv,
   getRegistrations,
   getRegistrationCount,
@@ -9,7 +10,7 @@ import {
   setAdminSession,
 } from "./scripts/storage.js";
 
-const ADMIN_ACCESS_CODE = "ieqtb2026";
+const ADMIN_PASSWORD = "IEQTB1245";
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
   dateStyle: "medium",
@@ -149,150 +150,184 @@ export function initHomePage() {
   });
 }
 
-function renderRegistrationRows(tbody, registrations) {
-  tbody.innerHTML = "";
+// ============================================
+// Admin Page Functions
+// ============================================
 
-  if (registrations.length === 0) {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td colspan="6" class="empty-state">
-        Nenhum cadastro foi salvo ainda.
-      </td>
+function renderRegistrations(registrations, searchTerm = "") {
+  const tbody = document.querySelector("#registrationsList");
+  if (!tbody) return;
+
+  let filtered = registrations;
+
+  if (searchTerm) {
+    const term = searchTerm.toLowerCase();
+    filtered = registrations.filter(
+      (r) =>
+        r.name.toLowerCase().includes(term) ||
+        r.email.toLowerCase().includes(term)
+    );
+  }
+
+  filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-state">
+          <strong>Nenhum cadastro encontrado</strong>
+          ${
+            searchTerm
+              ? "Tente buscar por otro termo."
+              : "Aún não há participantes cadastrados."
+          }
+        </td>
+      </tr>
     `;
-    tbody.appendChild(row);
     return;
   }
 
-  registrations.forEach((registration) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>
-        <strong>${registration.name}</strong>
-        <span>${registration.email}</span>
-      </td>
-      <td>${registration.age}</td>
-      <td>${registration.church}</td>
-      <td>${registration.phone}</td>
-      <td>${formatCreatedAt(registration.createdAt)}</td>
-      <td>${registration.id.slice(0, 8)}</td>
-    `;
-    tbody.appendChild(row);
+  tbody.innerHTML = filtered
+    .map(
+      (r) => `
+      <tr>
+        <td>
+          <span class="registration-name">${r.name}</span>
+          <span class="registration-email">${r.email}</span>
+        </td>
+        <td>${r.age}</td>
+        <td>${r.church}</td>
+        <td>${r.phone}</td>
+        <td class="registration-date">${formatCreatedAt(r.createdAt)}</td>
+        <td>
+          <button type="button" class="delete-btn" data-id="${r.id}">
+            🗑️ Excluir
+          </button>
+        </td>
+      </tr>
+    `
+    )
+    .join("");
+
+  tbody.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      if (confirm("Tem certeza que deseja excluir este participante?")) {
+        deleteRegistration(id);
+        refreshAdminTable();
+      }
+    });
   });
 }
 
-function refreshAdminStats(nodes) {
-  const registrations = getRegistrations();
-  nodes.count.textContent = String(registrations.length);
-  nodes.status.textContent = isAdminAuthenticated()
-    ? "Sessão administrativa ativa"
-    : "Acesso restrito";
-  renderRegistrationRows(nodes.tbody, registrations);
+function refreshAdminTable() {
+  const searchInput = document.querySelector("#searchInput");
+  const searchTerm = searchInput ? searchInput.value : "";
+  renderRegistrations(getRegistrations(), searchTerm);
+
+  const countNode = document.querySelector("#totalCount");
+  if (countNode) {
+    countNode.textContent = String(getRegistrationCount());
+  }
 }
 
-function renderAdminLogin(authCard, panel, statusMessage) {
-  authCard.hidden = false;
-  panel.hidden = true;
-  statusMessage.textContent = "Digite o código para visualizar os cadastros.";
+function showAdminPanel() {
+  const authModal = document.querySelector("#authModal");
+  const adminPanel = document.querySelector("#adminPanel");
+
+  if (authModal) authModal.classList.add("hidden");
+  if (adminPanel) adminPanel.classList.add("visible");
+
+  refreshAdminTable();
 }
 
-function renderAdminPanel(authCard, panel, statusMessage, nodes) {
-  authCard.hidden = true;
-  panel.hidden = false;
-  statusMessage.textContent = "Você já pode consultar, exportar ou limpar os cadastros.";
-  refreshAdminStats(nodes);
+function hideAdminPanel() {
+  const authModal = document.querySelector("#authModal");
+  const adminPanel = document.querySelector("#adminPanel");
+
+  if (authModal) {
+    authModal.classList.remove("hidden");
+    authModal.style.display = "flex";
+  }
+  if (adminPanel) adminPanel.classList.remove("visible");
 }
 
 export function initAdminPage() {
   const root = document.querySelector("[data-admin-page]");
   if (!root) return;
 
-  const authCard = document.querySelector("#adminAuthCard");
-  const panel = document.querySelector("#adminPanel");
-  const form = document.querySelector("#adminAuthForm");
-  const codeInput = document.querySelector("#adminCode");
-  const statusMessage = document.querySelector("#adminStatusMessage");
-  const countNode = document.querySelector("#adminCount");
-  const stateNode = document.querySelector("#adminState");
-  const tbody = document.querySelector("#registrationsTableBody");
-  const exportButton = document.querySelector("#exportCsvButton");
-  const clearButton = document.querySelector("#clearRegistrationsButton");
-  const logoutButton = document.querySelector("#logoutButton");
+  const authModal = document.querySelector("#authModal");
+  if (!authModal) return;
 
-  if (
-    !authCard ||
-    !panel ||
-    !form ||
-    !codeInput ||
-    !statusMessage ||
-    !countNode ||
-    !stateNode ||
-    !tbody ||
-    !exportButton ||
-    !clearButton ||
-    !logoutButton
-  ) {
-    return;
-  }
+  const authSubmit = document.querySelector("#authSubmit");
+  const authError = document.querySelector("#authError");
+  const passwordInput = document.querySelector("#adminPassword");
+  const exportBtn = document.querySelector("#exportBtn");
+  const logoutBtn = document.querySelector("#logoutBtn");
+  const searchInput = document.querySelector("#searchInput");
 
-  const nodes = {
-    count: countNode,
-    status: stateNode,
-    tbody,
-  };
+  if (!authSubmit || !passwordInput) return;
 
-  const syncView = () => {
-    if (isAdminAuthenticated()) {
-      renderAdminPanel(authCard, panel, statusMessage, nodes);
+  authSubmit.addEventListener("click", () => {
+    const password = passwordInput.value.trim();
+
+    if (password !== ADMIN_PASSWORD) {
+      if (authError) authError.classList.add("visible");
+      if (passwordInput) {
+        passwordInput.classList.add("error");
+        passwordInput.focus();
+      }
       return;
     }
 
-    renderAdminLogin(authCard, panel, statusMessage);
-  };
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const code = codeInput.value.trim().toLowerCase();
-
-    if (code !== ADMIN_ACCESS_CODE) {
-      statusMessage.textContent = "Código inválido. Tente novamente.";
-      codeInput.focus();
-      codeInput.select();
-      return;
+    if (authError) authError.classList.remove("visible");
+    if (passwordInput) {
+      passwordInput.classList.remove("error");
+      passwordInput.value = "";
     }
 
     setAdminSession();
-    codeInput.value = "";
-    syncView();
+    showAdminPanel();
   });
 
-  exportButton.addEventListener("click", () => {
-    const csv = exportRegistrationsAsCsv();
-    downloadCsv("ieqtb-cadastros.csv", csv);
-  });
-
-  clearButton.addEventListener("click", () => {
-    const confirmed = window.confirm(
-      "Deseja apagar todos os cadastros salvos neste navegador?"
-    );
-
-    if (!confirmed) return;
-
-    clearRegistrations();
-    refreshAdminStats(nodes);
-  });
-
-  logoutButton.addEventListener("click", () => {
-    clearAdminSession();
-    syncView();
-  });
-
-  window.addEventListener("storage", () => {
-    if (isAdminAuthenticated()) {
-      refreshAdminStats(nodes);
+  passwordInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      authSubmit.click();
     }
   });
 
-  syncView();
+  passwordInput.addEventListener("input", () => {
+    if (authError) authError.classList.remove("visible");
+    if (passwordInput) passwordInput.classList.remove("error");
+  });
+
+  if (exportBtn) {
+    exportBtn.addEventListener("click", () => {
+      const csv = exportRegistrationsAsCsv();
+      downloadCsv("ieqtb-cadastros.csv", csv);
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      clearAdminSession();
+      hideAdminPanel();
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      refreshAdminTable();
+    });
+  }
+
+  window.addEventListener("storage", () => {
+    if (!isAdminAuthenticated()) {
+      hideAdminPanel();
+    } else {
+      refreshAdminTable();
+    }
+  });
 }
 
 // ============================================
