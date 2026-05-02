@@ -154,62 +154,60 @@ export function initHomePage() {
 // Admin Page Functions
 // ============================================
 
-function renderRegistrations(registrations, searchTerm = "") {
-  const tbody = document.querySelector("#registrationsList");
-  if (!tbody) return;
+function renderRegistrations(registrations) {
+  const container = document.querySelector("#registrationsList");
+  if (!container) return;
 
-  let filtered = registrations;
+  // Sort by newest first
+  registrations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  if (searchTerm) {
-    const term = searchTerm.toLowerCase();
-    filtered = registrations.filter(
-      (r) =>
-        r.name.toLowerCase().includes(term) ||
-        r.email.toLowerCase().includes(term)
-    );
-  }
-
-  filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="6" class="empty-state">
-          <strong>Nenhum cadastro encontrado</strong>
-          ${
-            searchTerm
-              ? "Tente buscar por otro termo."
-              : "Aún não há participantes cadastrados."
-          }
-        </td>
-      </tr>
+  if (registrations.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-state-icon">📋</span>
+        <span class="empty-state-title">Nenhum cadastro encontrado</span>
+        <span class="empty-state-text">Os participantes aparecerão aqui após se cadastrarem.</span>
+      </div>
     `;
     return;
   }
 
-  tbody.innerHTML = filtered
+  container.innerHTML = registrations
     .map(
       (r) => `
-      <tr>
-        <td>
-          <span class="registration-name">${r.name}</span>
-          <span class="registration-email">${r.email}</span>
-        </td>
-        <td>${r.age}</td>
-        <td>${r.church}</td>
-        <td>${r.phone}</td>
-        <td class="registration-date">${formatCreatedAt(r.createdAt)}</td>
-        <td>
-          <button type="button" class="delete-btn" data-id="${r.id}">
-            🗑️ Excluir
+      <div class="reg-card">
+        <div class="reg-card-head">
+          <span class="reg-card-name">${r.name}</span>
+          <button type="button" class="reg-card-remove" data-id="${r.id}">
+            🗑️
           </button>
-        </td>
-      </tr>
+        </div>
+        <div class="reg-detail">
+          <span class="reg-detail-label">Idade</span>
+          <span class="reg-detail-value">${r.age} anos</span>
+        </div>
+        <div class="reg-detail">
+          <span class="reg-detail-label">Email</span>
+          <span class="reg-detail-value">${r.email}</span>
+        </div>
+        <div class="reg-detail">
+          <span class="reg-detail-label">Igreja</span>
+          <span class="reg-detail-value">${r.church}</span>
+        </div>
+        <div class="reg-detail">
+          <span class="reg-detail-label">Telefone</span>
+          <span class="reg-detail-value">${r.phone}</span>
+        </div>
+        <div class="reg-detail">
+          <span class="reg-detail-label">Cadastrado em</span>
+          <span class="reg-detail-value">${formatCreatedAt(r.createdAt)}</span>
+        </div>
+      </div>
     `
     )
     .join("");
 
-  tbody.querySelectorAll(".delete-btn").forEach((btn) => {
+  container.querySelectorAll(".reg-card-remove").forEach((btn) => {
     btn.addEventListener("click", () => {
       const id = btn.getAttribute("data-id");
       if (confirm("Tem certeza que deseja excluir este participante?")) {
@@ -221,9 +219,7 @@ function renderRegistrations(registrations, searchTerm = "") {
 }
 
 function refreshAdminTable() {
-  const searchInput = document.querySelector("#searchInput");
-  const searchTerm = searchInput ? searchInput.value : "";
-  renderRegistrations(getRegistrations(), searchTerm);
+  renderRegistrations(getRegistrations());
 
   const countNode = document.querySelector("#totalCount");
   if (countNode) {
@@ -232,58 +228,61 @@ function refreshAdminTable() {
 }
 
 function showAdminPanel() {
-  const authModal = document.querySelector("#authModal");
+  const authScreen = document.querySelector("#authScreen");
   const adminPanel = document.querySelector("#adminPanel");
 
-  if (authModal) authModal.classList.add("hidden");
-  if (adminPanel) adminPanel.classList.add("visible");
+  if (authScreen) authScreen.style.display = "none";
+  if (adminPanel) adminPanel.style.display = "flex";
 
   refreshAdminTable();
 }
 
 function hideAdminPanel() {
-  const authModal = document.querySelector("#authModal");
+  const authScreen = document.querySelector("#authScreen");
   const adminPanel = document.querySelector("#adminPanel");
 
-  if (authModal) {
-    authModal.classList.remove("hidden");
-    authModal.style.display = "flex";
+  if (authScreen) {
+    authScreen.style.display = "flex";
   }
-  if (adminPanel) adminPanel.classList.remove("visible");
+  if (adminPanel) adminPanel.style.display = "none";
 }
 
 export function initAdminPage() {
-  const root = document.querySelector("[data-admin-page]");
-  if (!root) return;
+  const authScreen = document.querySelector("#authScreen");
+  const adminPanel = document.querySelector("#adminPanel");
+  
+  if (!authScreen || !adminPanel) return;
 
-  const authModal = document.querySelector("#authModal");
-  if (!authModal) return;
-
-  const authSubmit = document.querySelector("#authSubmit");
+  const loginBtn = document.querySelector("#loginBtn");
   const authError = document.querySelector("#authError");
-  const passwordInput = document.querySelector("#adminPassword");
+  const passwordInput = document.querySelector("#passwordInput");
   const exportBtn = document.querySelector("#exportBtn");
   const logoutBtn = document.querySelector("#logoutBtn");
-  const searchInput = document.querySelector("#searchInput");
+  const clearAllBtn = document.querySelector("#clearAllBtn");
 
-  if (!authSubmit || !passwordInput) return;
+  if (!loginBtn || !passwordInput) return;
 
-authSubmit.addEventListener("click", () => {
+  // Check if already authenticated
+  if (isAdminAuthenticated()) {
+    showAdminPanel();
+  }
+
+  loginBtn.addEventListener("click", () => {
     const password = passwordInput.value.trim();
 
-    // Aceita senha em maiúsculas OU minúsculas (case-insensitive)
+    // Case-insensitive password check
     if (password.toUpperCase() !== ADMIN_PASSWORD) {
-      if (authError) authError.classList.add("visible");
+      if (authError) authError.classList.add("show");
       if (passwordInput) {
-        passwordInput.classList.add("error");
+        passwordInput.classList.add("fail");
         passwordInput.focus();
       }
       return;
     }
 
-    if (authError) authError.classList.remove("visible");
+    if (authError) authError.classList.remove("show");
     if (passwordInput) {
-      passwordInput.classList.remove("error");
+      passwordInput.classList.remove("fail");
       passwordInput.value = "";
     }
 
@@ -293,13 +292,13 @@ authSubmit.addEventListener("click", () => {
 
   passwordInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
-      authSubmit.click();
+      loginBtn.click();
     }
   });
 
   passwordInput.addEventListener("input", () => {
-    if (authError) authError.classList.remove("visible");
-    if (passwordInput) passwordInput.classList.remove("error");
+    if (authError) authError.classList.remove("show");
+    if (passwordInput) passwordInput.classList.remove("fail");
   });
 
   if (exportBtn) {
@@ -309,16 +308,21 @@ authSubmit.addEventListener("click", () => {
     });
   }
 
+  // Clear all data button
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener("click", () => {
+      if (confirm("⚠️ ATENÇÃO! Isso irá excluir TODOS os cadastros. Tem certeza?")) {
+        clearRegistrations();
+        refreshAdminTable();
+        alert("Todos os cadastros foram excluídos.");
+      }
+    });
+  }
+
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
       clearAdminSession();
       hideAdminPanel();
-    });
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      refreshAdminTable();
     });
   }
 
