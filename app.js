@@ -10,7 +10,7 @@ import {
   setAdminSession,
 } from "./scripts/storage.js";
 
-const ADMIN_PASSWORD = "IEQTB1245";
+const ADMIN_PASSWORD = "IEQTB1248";
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
   dateStyle: "medium",
@@ -225,7 +225,15 @@ function refreshAdminTable() {
   if (countNode) {
     countNode.textContent = String(getRegistrationCount());
   }
+  
+  const churchesNode = document.querySelector("#churchesCount");
+  if (churchesNode) {
+    const registrations = getRegistrations();
+    const uniqueChurches = new Set(registrations.map(r => r.church).filter(Boolean)).size;
+    churchesNode.textContent = String(uniqueChurches);
+  }
 }
+
 
 function showAdminPanel() {
   const authScreen = document.querySelector("#authScreen");
@@ -272,7 +280,7 @@ export function initAdminPage() {
     const password = passwordInput.value.trim();
 
     // Case-insensitive password check
-    if (password.toUpperCase() !== ADMIN_PASSWORD) {
+if (password !== ADMIN_PASSWORD) {
       if (authError) authError.classList.add("show");
       if (passwordInput) {
         passwordInput.classList.add("fail");
