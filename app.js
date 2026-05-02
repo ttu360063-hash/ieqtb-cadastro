@@ -262,9 +262,10 @@ export function initAdminPage() {
 
   if (!loginBtn || !passwordInput) return;
 
-  // Check if already authenticated
+// Always show auth screen first - no bypass
+  // Session must be cleared before showing auth screen
   if (isAdminAuthenticated()) {
-    showAdminPanel();
+    clearAdminSession();
   }
 
   loginBtn.addEventListener("click", () => {
