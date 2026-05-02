@@ -1,14 +1,12 @@
 import {
-  clearAdminSession,
-  clearRegistrations,
-  deleteRegistration,
-  exportRegistrationsAsCsv,
-  getRegistrations,
-  getRegistrationCount,
-  isAdminAuthenticated,
   saveRegistration,
-  setAdminSession,
-} from "./scripts/storage.js";
+  getRegistrations,
+  deleteRegistration,
+  clearRegistrations,
+  getRegistrationCount,
+  exportRegistrationsAsCsv,
+} from "./scripts/supabase.js";
+
 
 const ADMIN_PASSWORD = "IEQTB1248";
 
