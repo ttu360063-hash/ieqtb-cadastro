@@ -259,6 +259,30 @@ export function initAdminPage() {
   
   if (!authScreen || !adminPanel) return;
 
+  // ✅ Admin auth functions (global scope)
+  const ADMIN_SESSION_KEY = 'ieqtb_admin_session';
+  let adminAuthenticated = false;
+
+  function isAdminAuthenticated() {
+    return adminAuthenticated;
+  }
+
+  function setAdminSession() {
+    adminAuthenticated = true;
+    localStorage.setItem(ADMIN_SESSION_KEY, 'true');
+  }
+
+  function clearAdminSession() {
+    adminAuthenticated = false;
+    localStorage.removeItem(ADMIN_SESSION_KEY);
+  }
+
+  // Check session on load
+  if (localStorage.getItem(ADMIN_SESSION_KEY) === 'true') {
+    adminAuthenticated = true;
+    showAdminPanel();
+  }
+
   const loginBtn = document.querySelector("#loginBtn");
   const authError = document.querySelector("#authError");
   const passwordInput = document.querySelector("#passwordInput");
@@ -268,17 +292,10 @@ export function initAdminPage() {
 
   if (!loginBtn || !passwordInput) return;
 
-// Always show auth screen first - no bypass
-  // Session must be cleared before showing auth screen
-  if (isAdminAuthenticated()) {
-    clearAdminSession();
-  }
-
   loginBtn.addEventListener("click", () => {
     const password = passwordInput.value.trim();
 
-    // Case-insensitive password check
-if (password !== ADMIN_PASSWORD) {
+    if (password !== ADMIN_PASSWORD) {
       if (authError) authError.classList.add("show");
       if (passwordInput) {
         passwordInput.classList.add("fail");
@@ -333,14 +350,14 @@ if (password !== ADMIN_PASSWORD) {
     });
   }
 
+  // ✅ Local storage event listener
   window.addEventListener("storage", () => {
-    if (!isAdminAuthenticated()) {
+    if (localStorage.getItem(ADMIN_SESSION_KEY) !== 'true') {
       hideAdminPanel();
-    } else {
-      refreshAdminTable();
     }
   });
 }
+
 
 // ============================================
 // Init pages
