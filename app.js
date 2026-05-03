@@ -1,12 +1,12 @@
 import {
   saveRegistration,
   getRegistrations,
-  deleteRegistration,
-  clearRegistrations,
   getRegistrationCount,
   exportRegistrationsAsCsv,
+  groupChurches,
+  subscribeRealtime,
+  unsubscribeRealtime,
 } from "./scripts/supabase.js";
-
 
 const ADMIN_PASSWORD = "IEQTB1248";
 
@@ -27,18 +27,18 @@ function setError(errors, name, message) {
 
 function validateRegistration(form) {
   const errors = {};
-  const name = getFieldValue(form, "name");
-  const age = getFieldValue(form, "age");
+  const nome = getFieldValue(form, "name");
+  const idade = getFieldValue(form, "age");
   const email = getFieldValue(form, "email");
-  const church = getFieldValue(form, "church");
-  const phone = getFieldValue(form, "phone");
+  const igreja = getFieldValue(form, "church");
+  const telefone = getFieldValue(form, "phone");
 
-  if (name.length < 3) {
+  if (nome.length < 3) {
     setError(errors, "name", "Informe seu nome completo.");
   }
 
-  const ageNumber = Number(age);
-  if (!age || Number.isNaN(ageNumber) || ageNumber < 1 || ageNumber > 120) {
+  const idadeNumber = Number(idade);
+  if (!idade || Number.isNaN(idadeNumber) || idadeNumber < 1 || idadeNumber > 120) {
     setError(errors, "age", "Informe uma idade válida.");
   }
 
@@ -46,11 +46,11 @@ function validateRegistration(form) {
     setError(errors, "email", "Digite um e-mail válido.");
   }
 
-  if (church.length < 2) {
+  if (igreja.length < 2) {
     setError(errors, "church", "Informe o nome da igreja.");
   }
 
-  const digitsOnly = phone.replace(/\D/g, "");
+  const digitsOnly = telefone.replace(/\D/g, "");
   if (digitsOnly.length < 10) {
     setError(errors, "phone", "Informe um telefone válido.");
   }
@@ -58,20 +58,32 @@ function validateRegistration(form) {
   return {
     errors,
     values: {
-      name,
-      age: ageNumber,
-      email,
-      church,
-      phone,
+      nome,
+      idade: idadeNumber,
+      email: email.toLowerCase().trim(),
+      igreja,
+      telefone: telefone.replace(/\D/g, ""),
     },
   };
 }
 
 function renderFieldErrors(form, errors) {
+  // Add data-error-for to inputs if not present
+  const inputs = form.querySelectorAll('input');
+  inputs.forEach(input => {
+    if (!input.parentNode.querySelector('.error-msg')) {
+      const errorSpan = document.createElement('span');
+      errorSpan.className = 'error-msg';
+      errorSpan.setAttribute('data-error-for', input.name);
+      input.parentNode.appendChild(errorSpan);
+    }
+  });
+
   const nodes = form.querySelectorAll("[data-error-for]");
   nodes.forEach((node) => {
     const key = node.getAttribute("data-error-for");
     node.textContent = errors[key] || "";
+    node.style.display = errors[key] ? 'block' : 'none';
   });
 }
 
@@ -81,13 +93,12 @@ function clearFieldErrors(form) {
 
 function createRegistrationRecord(values) {
   return {
-    id: crypto.randomUUID(),
-    name: values.name,
-    age: values.age,
+    nome: values.nome,
+    idade: values.idade,
     email: values.email,
-    church: values.church,
-    phone: values.phone,
-    createdAt: new Date().toISOString(),
+    igreja: values.igreja,
+    telefone: values.telefone,
+    created_at: new Date().toISOString(),
   };
 }
 
@@ -111,22 +122,15 @@ function formatCreatedAt(createdAt) {
 
 export function initHomePage() {
   const form = document.querySelector("#registrationForm");
-  const totalCount = document.querySelector("#totalCount");
   const successBox = document.querySelector("#successBox");
 
-  if (!form || !totalCount || !successBox) return;
-
-  const updateCount = () => {
-    totalCount.textContent = String(getRegistrationCount());
-  };
-
-  updateCount();
+  if (!form || !successBox) return;
 
   form.addEventListener("input", () => {
     clearFieldErrors(form);
   });
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const result = validateRegistration(form);
@@ -137,27 +141,26 @@ export function initHomePage() {
       return;
     }
 
-    const registration = createRegistrationRecord(result.values);
-    saveRegistration(registration);
-    form.reset();
-    clearFieldErrors(form);
-    updateCount();
-
-    successBox.hidden = false;
-    successBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    try {
+      const registration = createRegistrationRecord(result.values);
+      await saveRegistration(registration);
+      form.reset();
+      clearFieldErrors(form);
+      successBox.hidden = false;
+      successBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch (err) {
+      console.error('Erro ao salvar:', err);
+      alert('Erro ao enviar inscrição. Tente novamente.');
+    }
   });
 }
-
-// ============================================
-// Admin Page Functions
-// ============================================
 
 function renderRegistrations(registrations) {
   const container = document.querySelector("#registrationsList");
   if (!container) return;
 
   // Sort by newest first
-  registrations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  registrations.sort((a, b) => new Date(b.created_at || b.createdAt) - new Date(a.created_at || a.createdAt));
 
   if (registrations.length === 0) {
     container.innerHTML = `
@@ -171,18 +174,14 @@ function renderRegistrations(registrations) {
   }
 
   container.innerHTML = registrations
-    .map(
-      (r) => `
+    .map((r) => `
       <div class="reg-card">
         <div class="reg-card-head">
-          <span class="reg-card-name">${r.name}</span>
-          <button type="button" class="reg-card-remove" data-id="${r.id}">
-            🗑️
-          </button>
+          <span class="reg-card-name">${r.nome || r.name}</span>
         </div>
         <div class="reg-detail">
           <span class="reg-detail-label">Idade</span>
-          <span class="reg-detail-value">${r.age} anos</span>
+          <span class="reg-detail-value">${(r.idade || r.age)} anos</span>
         </div>
         <div class="reg-detail">
           <span class="reg-detail-label">Email</span>
@@ -190,59 +189,42 @@ function renderRegistrations(registrations) {
         </div>
         <div class="reg-detail">
           <span class="reg-detail-label">Igreja</span>
-          <span class="reg-detail-value">${r.church}</span>
+          <span class="reg-detail-value">${r.igreja || r.church}</span>
         </div>
         <div class="reg-detail">
           <span class="reg-detail-label">Telefone</span>
-          <span class="reg-detail-value">${r.phone}</span>
+          <span class="reg-detail-value">${r.telefone || r.phone}</span>
         </div>
         <div class="reg-detail">
           <span class="reg-detail-label">Cadastrado em</span>
-          <span class="reg-detail-value">${formatCreatedAt(r.createdAt)}</span>
+          <span class="reg-detail-value">${formatCreatedAt(r.created_at || r.createdAt)}</span>
         </div>
       </div>
-    `
-    )
+    `)
     .join("");
-
-  container.querySelectorAll(".reg-card-remove").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const id = btn.getAttribute("data-id");
-      if (confirm("Tem certeza que deseja excluir este participante?")) {
-        deleteRegistration(id);
-        refreshAdminTable();
-      }
-    });
-  });
 }
 
 async function refreshAdminTable() {
   try {
-    const { data: registrations, error } = await getRegistrations();
-    
-    if (error) {
-      console.error('Erro ao buscar cadastros:', error);
-      // Opcional: mostrar alerta no UI
-      return;
-    }
-    
-    renderRegistrations(registrations || []);
+    const registrations = await getRegistrations();
+
+    renderRegistrations(registrations);
 
     const countNode = document.querySelector("#totalCount");
     if (countNode) {
-      countNode.textContent = String(registrations.length);
+      const count = await getRegistrationCount();
+      countNode.textContent = String(count);
     }
     
     const churchesNode = document.querySelector("#churchesCount");
-    if (churchesNode) {
-      const uniqueChurches = new Set(registrations.map(r => r.church).filter(Boolean)).size;
-      churchesNode.textContent = String(uniqueChurches);
+    if (churchesNode && registrations.length > 0) {
+      const uniqueChurchesCount = groupChurches(registrations);
+      churchesNode.textContent = String(uniqueChurchesCount);
     }
   } catch (err) {
     console.error('Erro no refresh:', err);
   }
 }
-
 
 async function showAdminPanel() {
   const authScreen = document.querySelector("#authScreen");
@@ -253,8 +235,8 @@ async function showAdminPanel() {
 
   await refreshAdminTable();
   
-  // Auto-refresh a cada 10 segundos
-  setInterval(refreshAdminTable, 10000);
+  // Realtime subscription
+  subscribeRealtime(() => refreshAdminTable());
 }
 
 function hideAdminPanel() {
@@ -265,6 +247,8 @@ function hideAdminPanel() {
     authScreen.style.display = "flex";
   }
   if (adminPanel) adminPanel.style.display = "none";
+  
+  unsubscribeRealtime();
 }
 
 export function initAdminPage() {
@@ -273,13 +257,8 @@ export function initAdminPage() {
   
   if (!authScreen || !adminPanel) return;
 
-  // ✅ Admin auth functions (global scope)
   const ADMIN_SESSION_KEY = 'ieqtb_admin_session';
   let adminAuthenticated = false;
-
-  function isAdminAuthenticated() {
-    return adminAuthenticated;
-  }
 
   function setAdminSession() {
     adminAuthenticated = true;
@@ -291,22 +270,15 @@ export function initAdminPage() {
     localStorage.removeItem(ADMIN_SESSION_KEY);
   }
 
-  // Check session on load
-  if (localStorage.getItem(ADMIN_SESSION_KEY) === 'true') {
-    adminAuthenticated = true;
-    showAdminPanel();
-  }
-
   const loginBtn = document.querySelector("#loginBtn");
   const authError = document.querySelector("#authError");
   const passwordInput = document.querySelector("#passwordInput");
   const exportBtn = document.querySelector("#exportBtn");
   const logoutBtn = document.querySelector("#logoutBtn");
-  const clearAllBtn = document.querySelector("#clearAllBtn");
 
   if (!loginBtn || !passwordInput) return;
 
-  loginBtn.addEventListener("click", () => {
+  loginBtn.addEventListener("click", async () => {
     const password = passwordInput.value.trim();
 
     if (password !== ADMIN_PASSWORD) {
@@ -325,7 +297,12 @@ export function initAdminPage() {
     }
 
     setAdminSession();
-    showAdminPanel();
+    try {
+      await showAdminPanel();
+    } catch (error) {
+      console.error('Erro ao mostrar painel:', error);
+      alert('Erro ao acessar painel. Tente novamente.');
+    }
   });
 
   passwordInput.addEventListener("keypress", (e) => {
@@ -351,17 +328,6 @@ export function initAdminPage() {
     });
   }
 
-  // Clear all data button
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener("click", () => {
-      if (confirm("⚠️ ATENÇÃO! Isso irá excluir TODOS os cadastros. Tem certeza?")) {
-        clearRegistrations();
-        refreshAdminTable();
-        alert("Todos os cadastros foram excluídos.");
-      }
-    });
-  }
-
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
       clearAdminSession();
@@ -369,7 +335,6 @@ export function initAdminPage() {
     });
   }
 
-  // ✅ Local storage event listener
   window.addEventListener("storage", () => {
     if (localStorage.getItem(ADMIN_SESSION_KEY) !== 'true') {
       hideAdminPanel();
@@ -377,10 +342,7 @@ export function initAdminPage() {
   });
 }
 
-
-// ============================================
 // Init pages
-// ============================================
-
 initHomePage();
 initAdminPage();
+
