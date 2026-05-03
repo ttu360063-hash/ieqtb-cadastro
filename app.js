@@ -216,31 +216,45 @@ function renderRegistrations(registrations) {
   });
 }
 
-function refreshAdminTable() {
-  renderRegistrations(getRegistrations());
+async function refreshAdminTable() {
+  try {
+    const { data: registrations, error } = await getRegistrations();
+    
+    if (error) {
+      console.error('Erro ao buscar cadastros:', error);
+      // Opcional: mostrar alerta no UI
+      return;
+    }
+    
+    renderRegistrations(registrations || []);
 
-  const countNode = document.querySelector("#totalCount");
-  if (countNode) {
-    countNode.textContent = String(getRegistrationCount());
-  }
-  
-  const churchesNode = document.querySelector("#churchesCount");
-  if (churchesNode) {
-    const registrations = getRegistrations();
-    const uniqueChurches = new Set(registrations.map(r => r.church).filter(Boolean)).size;
-    churchesNode.textContent = String(uniqueChurches);
+    const countNode = document.querySelector("#totalCount");
+    if (countNode) {
+      countNode.textContent = String(registrations.length);
+    }
+    
+    const churchesNode = document.querySelector("#churchesCount");
+    if (churchesNode) {
+      const uniqueChurches = new Set(registrations.map(r => r.church).filter(Boolean)).size;
+      churchesNode.textContent = String(uniqueChurches);
+    }
+  } catch (err) {
+    console.error('Erro no refresh:', err);
   }
 }
 
 
-function showAdminPanel() {
+async function showAdminPanel() {
   const authScreen = document.querySelector("#authScreen");
   const adminPanel = document.querySelector("#adminPanel");
 
   if (authScreen) authScreen.style.display = "none";
   if (adminPanel) adminPanel.style.display = "flex";
 
-  refreshAdminTable();
+  await refreshAdminTable();
+  
+  // Auto-refresh a cada 10 segundos
+  setInterval(refreshAdminTable, 10000);
 }
 
 function hideAdminPanel() {
@@ -326,9 +340,14 @@ export function initAdminPage() {
   });
 
   if (exportBtn) {
-    exportBtn.addEventListener("click", () => {
-      const csv = exportRegistrationsAsCsv();
-      downloadCsv("ieqtb-cadastros.csv", csv);
+    exportBtn.addEventListener("click", async () => {
+      try {
+        const csv = await exportRegistrationsAsCsv();
+        downloadCsv("ieqtb-cadastros.csv", csv);
+      } catch (err) {
+        console.error('Erro no export:', err);
+        alert('Erro ao gerar CSV');
+      }
     });
   }
 
